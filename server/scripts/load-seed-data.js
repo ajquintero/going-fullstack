@@ -26,7 +26,7 @@ Promise.all(
           FROM article_category_table
           WHERE short_name = $5;
         `,
-        [article.title, article.author, article.views, article.isClickbait, article.category]);
+        [article.title, article.author, article.views, article.isClickbait, article.category_id]);
       })
     );
   })
