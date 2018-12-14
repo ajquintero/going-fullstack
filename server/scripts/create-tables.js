@@ -13,7 +13,7 @@ client.query(`
     id SERIAL PRIMARY KEY,
     title VARCHAR(256) NOT NULL,
     author VARCHAR(256) NOT NULL,
-    category VARCHAR(256) NOT NULL REFERENCES article_category_table(name),
+    category_id INTEGER NOT NULL REFERENCES article_category_table(id),
     is_clickbait BOOLEAN NOT NULL,
     views INTEGER
     );

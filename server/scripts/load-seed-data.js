@@ -16,13 +16,13 @@ Promise.all(
     return Promise.all(
       articles.map(article => {
         return client.query(`
-          INSERT INTO article (title, author, views, is_clickbait, category)
+          INSERT INTO article (title, category_id, author, views, is_clickbait)
           SELECT
             $1 as title,
-            id as author,
-            $2 as views,
-            $3 as is_clickbait,
-            $4 as category
+            id as category_id,
+            $2 as author,
+            $3 as views,
+            $4 as is_clickbait
           FROM article_category_table
           WHERE short_name = $5;
         `,
