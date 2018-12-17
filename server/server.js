@@ -35,10 +35,10 @@ app.get('/api/categories', (req, res) => {
       article.author as author,
       article.views as views,
       article.is_clickbait as "isClickbait",
-      article.category as category
+      article.category_id as categoryId
     FROM article
     JOIN article_category_table
-    ON article.category = article_category_table.id
+    ON article.article_category = article.id
     ORDER BY views DESC, name ASC;
   `)
     .then(result => {
@@ -52,7 +52,7 @@ app.get('/api/articles/:id', (req, res) => {
     SELECT * FROM article 
     WHERE id = $1
     JOIN article_category_table
-    ON article.category = article_category_table.id
+    ON article.category_id = article_category_table.id
     WHERE article_category_table.id = $1;
   `,
   [req.params.id])
@@ -65,11 +65,11 @@ app.post('/api/articles', (req, res)=> {
   const body = req.body;
 
   client.query(`
-    INSERT INTO article (title, author, views, is_clickbait, category)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO article (title, author, views, is_clickbait)
+    VALUES ($1, $2, $3, $4)
     RETURNING id;
   `,
-  [body.title, body.author, body.views, body.category])
+  [body.title, body.author, body.views, body.isClickbait])
     .then(result => {
       const id = result.rows[0].id;
 
@@ -116,12 +116,12 @@ app.put('/api/articles/:id', (req, res) => {
       RETURNING
         id, 
         title,
-        article_category_table.id as as "categoryId",
+        article_category_table.id as as "category",
         author,
         is_clickbait as "isClickbait,
         views
     `,
-  [body.title, body.categoryId, body.author, body.isClickbait, body.views, body.id])
+  [body.title, body.category, body.author, body.isClickbait, body.views, body.id])
     .then(result => {
       res.json(result.rows[0]);
     });
